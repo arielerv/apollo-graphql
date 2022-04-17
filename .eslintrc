@@ -1,0 +1,74 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "react",
+    "jsx-a11y",
+    "@typescript-eslint",
+    "promise",
+    "import"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript"
+  ],
+  "env": {
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "globals": {
+    "render": true,
+    "tearDown": true
+  },
+  "settings": {
+    "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "directory": "./tsconfig.json"
+      },
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
+  "rules": {
+    "promise/always-return": "error",
+    "promise/no-return-wrap": "error",
+    "promise/param-names": "error",
+    "indent": ["error", 4, {"SwitchCase": 1, "ignoredNodes": ["TemplateLiteral"]}],
+    "linebreak-style": ["error", "unix"],
+    "eol-last": ["error"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "template-curly-spacing": ["off"],
+    "import/prefer-default-export": 0,
+    "react/require-default-props": 0,
+    "object-curly-newline": "off",
+    "arrow-parens": ["error", "as-needed"],
+    "no-underscore-dangle": ["error", {"allow": ["_id"]}],
+    "function-paren-newline": "off",
+    "object-curly-spacing": ["error", "never"],
+    "lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
+    "import/no-cycle": ["off"],
+    "import/no-extraneous-dependencies": ["off"],
+    "comma-dangle": ["error", "never"],
+    "max-len": ["error", 150],
+    "react/jsx-filename-extension": ["error", {"extensions": [".ts", ".tsx"]}],
+    "react/jsx-tag-spacing": ["error", {"beforeSelfClosing": "never"}],
+    "react/jsx-indent": ["error", 4],
+    "react/jsx-indent-props": ["error", 4],
+    "react/destructuring-assignment": "off",
+    "jsx-a11y/anchor-is-valid": ["error", {"specialLink": [], "aspects": ["noHref", "invalidHref", "preferButton"]}],
+    "react/static-property-placement": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-fragments": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": ["error", "ignorePackages", {"js": "never", "jsx": "never", "ts": "never", "tsx": "never"}]
+  }
+}
