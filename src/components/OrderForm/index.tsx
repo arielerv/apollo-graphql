@@ -1,23 +1,33 @@
 import React from 'react';
-import {Form, ErrorMessage} from 'formik';
+import {Form} from 'formik';
+import {Input,Select} from 'components';
 
-import {Button, Input, Label} from './styled';
+import {Button} from './styled';
 
-const OrderForm = ({handleSubmit}: {handleSubmit: () => void}) => (
-    <Form
-        data-testid="order-form"
-        style={{display: 'flex', flexDirection: 'column', textAlign: 'center', width: '100%', alignItems: 'center'}}
-        onSubmit={handleSubmit}
-        noValidate
-    >
-        <Label>Product ID</Label>
-        <Input type="number" name="productVariantId" $isFormik/>
-        <ErrorMessage name="productVariantId"/>
-        <Label>Quantity</Label>
-        <Input type="number" name="quantity" $isFormik/>
-        <ErrorMessage name="quantity"/>
-        <Button type="submit" >Order it!</Button>
-    </Form>
-);
+const OrderForm = (
+    {handleSubmit, productVariables, isLoadingVariables}
+        : {handleSubmit: () => void, productVariables: [], isLoadingVariables: boolean}
+) => {
+    return (
+        <Form
+            data-testid="order-form"
+            style={{display: 'flex', flexDirection: 'column', textAlign: 'center', width: '100%', alignItems: 'center'}}
+            onSubmit={handleSubmit}
+            noValidate
+        >
+            <Select
+                name="quantity"
+                label="quantity"
+                options={productVariables}
+                getOptionValue={(option: { id: never; }) => option.id}
+                getOptionLabel={(option: { name: never; }) => option.name}
+                isFormik
+                isLoading={isLoadingVariables}
+            />
+            <Input name="productVariantId" isFormik label="Product ID" type="number"/>
+            <Button type="submit" >Order it!</Button>
+        </Form>
+    );
+};
 
 export default OrderForm;
