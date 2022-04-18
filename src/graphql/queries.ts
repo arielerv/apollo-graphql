@@ -25,3 +25,16 @@ query Search($filters: SearchInput!) {
   }
 }
 `;
+
+export const GET_PRODUCT_VARIANTS = gql`
+query getVariants($productId: ID!) {
+  product(id: $productId) {
+    id
+    name
+    variants {
+      id
+      name
+    }
+  }
+}
+`;

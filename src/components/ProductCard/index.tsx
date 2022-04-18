@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Formik} from 'formik';
-import {useMutation} from '@apollo/client';
+import {useMutation, useLazyQuery} from '@apollo/client';
 
 import {IProduct, IOrder} from 'interfaces';
 import {LazyImage, Modal} from 'components';
-import {GET_PRODUCTS_QUERY} from 'graphql/queries';
+import {GET_PRODUCT_VARIANTS, GET_PRODUCTS_QUERY} from 'graphql/queries';
 import {CREATE_ORDER} from 'graphql/mutations';
 import {defaultValues} from 'constant';
 
@@ -13,20 +13,35 @@ import validationSchema from '../OrderForm/validationSchema';
 import {Card, Content, Title, Description, DescriptionContainer, Price, PriceContainer} from './styled';
 
 const ProductCard = ({product}: {product: IProduct}) => {
-    const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useState<boolean>(false);
+    const [productId, setProductId] = useState<number | null>(null);
     const options = {filters: {term: '', groupByProduct: true}};
     const [createOrder] = useMutation(CREATE_ORDER, {
         refetchQueries:  [{query: GET_PRODUCTS_QUERY, variables: options}]
     });
+    const [getVariants, {data, loading}] = useLazyQuery(GET_PRODUCT_VARIANTS);
+
+    useEffect(() => {
+        if(productId) {
+            getVariants({variables : {productId}});
+        }
+    }, [productId]);
 
     const handleSubmit = (values: IOrder) => {
         createOrder({variables: values}).then(r => console.log({r}));
         setIsActive(false);
     };
 
+    const handleClick = (id: number) => {
+        setIsActive(!!id);
+        setProductId(id);
+    };
+
+    console.log({data});
+
     return (
         <>
-            <Card data-testid={`card-${product.productId}`} onClick={() => setIsActive(true)}>
+            <Card data-testid={`card-${product.productId}`} onClick={() => handleClick(product.productId)}>
                 <LazyImage
                     src={product.productAsset?.preview}
                     alt={product.productName}
@@ -49,9 +64,15 @@ const ProductCard = ({product}: {product: IProduct}) => {
                 <Formik
                     initialValues={defaultValues.orderForm}
                     onSubmit={handleSubmit}
-                    component={OrderForm}
                     validationSchema={validationSchema}
-                />
+                >
+                    {props => (
+                        <OrderForm
+                            handleSubmit={props.handleSubmit}
+                            productVariables={data?.product?.variants}
+                            isLoadingVariables={loading}
+                        />)}
+                </Formik>
             </Modal>
         </>
     );
